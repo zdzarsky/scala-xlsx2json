@@ -11,7 +11,7 @@ import scala.jdk.CollectionConverters._
 import scala.util.{Try, Using}
 
 
-object XlsxDataReader {
+object XlsxToNodesListConverter {
   def read(file: File, sheetNo: Int = 0, levels: Int = 3): Try[List[Node]] = {
     Using(WorkbookFactory.create(file))(
       _.getSheetAt(sheetNo).rowIterator().asScala.drop(1).toList

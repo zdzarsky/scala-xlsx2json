@@ -7,13 +7,15 @@ import com.github.zdzarsky._
 
 object GridUtils {
 
-  implicit class GridToNodesConverter(extended: List[List[Cell]]) {
+  type ExcelGrid = List[List[Cell]]
+
+  implicit class GridToNodesConverter(extended: ExcelGrid) {
     def toNodesList(maxLevel: Int): List[Node] = {
       makeNodes(extended, 0, maxLevel, (0, extended.length - 1))
     }
   }
 
-  private def makeNodes(rows: List[List[Cell]], currentLevel: Int, maxLevel: Int, rowRange: (Int, Int)): List[Node] = {
+  private def makeNodes(rows: ExcelGrid, currentLevel: Int, maxLevel: Int, rowRange: (Int, Int)): List[Node] = {
     if (currentLevel == maxLevel) {
       List.empty
     } else {
@@ -21,10 +23,11 @@ object GridUtils {
         .filter(indexedRow => (rowRange._1 to rowRange._2).contains(indexedRow._2))
         .filter(_._1(currentLevel).getCellType != CellType.BLANK)
         .pipeForward(p => countRanges(p, rowRange._2))
-        .map(rangedRow => new Node(rangedRow._1(maxLevel).getNumericCellValue.toInt,
+        .map(rangedRow => new Node(
+          rangedRow._1(maxLevel).getNumericCellValue.toInt,
           rangedRow._1(currentLevel).getStringCellValue,
-          makeNodes(rows, currentLevel + 1, maxLevel, rangedRow._2))
-        )
+          makeNodes(rows, currentLevel + 1, maxLevel, rangedRow._2)
+        ))
     }
   }
 }
