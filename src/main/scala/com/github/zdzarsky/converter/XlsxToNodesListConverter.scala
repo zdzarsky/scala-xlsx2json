@@ -5,19 +5,20 @@ import java.io.File
 import com.github.zdzarsky._
 import com.github.zdzarsky.model.Node
 import com.github.zdzarsky.utils.GridUtils._
-import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.usermodel.{Workbook, WorkbookFactory}
 
 import scala.jdk.CollectionConverters._
 import scala.util.{Try, Using}
 
+class XlsxToNodesListConverter {
 
-object XlsxToNodesListConverter {
-  def read(file: File, sheetNo: Int = 0, levels: Int = 3): Try[List[Node]] = {
+  def convert(file: File, sheetNo: Int = 0, levels: Int = 3): Try[List[Node]] =
+    readGridFromFile(file, sheetNo).map(_.toNodesList(levels))
+
+
+  private def readGridFromFile(file: File, sheetNo: Int): Try[ExcelGrid] = {
     Using(WorkbookFactory.create(file))(
       _.getSheetAt(sheetNo).rowIterator().asScala.drop(1).toList
-        .pipeForward(rows => for {
-          row <- rows
-        } yield row.cellIterator().asScala.toList))
-      .map(_.toNodesList(levels))
+        .pipeForward(rows => for {row <- rows} yield row.cellIterator().asScala.toList))
   }
 }

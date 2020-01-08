@@ -8,6 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.{Failure, Success, Try}
 import XlsxToNodesListConverterTest._
+import com.github.zdzarsky.TestUtils._
 
 class XlsxToNodesListConverterTest extends AnyWordSpec with GivenWhenThen {
   "XlsxDataReader" should {
@@ -24,12 +25,14 @@ class XlsxToNodesListConverterTest extends AnyWordSpec with GivenWhenThen {
     "Read proper data" in {
       Given("File from resources")
       val file = new File(getFileFromResources.getOrElse(fail()))
+      val converter = new XlsxToNodesListConverter()
       When("Reading")
-      val maybeData = XlsxToNodesListConverter.read(file)
+      val maybeData = converter.convert(file)
       Then("Should have 4 elements")
       maybeData match {
         case Failure(_) => fail()
-        case Success(nodes) => assert(nodes.length == 4)
+        case Success(nodes) =>
+          assert(nodes == structure)
       }
     }
   }

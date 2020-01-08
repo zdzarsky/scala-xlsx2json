@@ -11,7 +11,7 @@ import scala.util.{Failure, Success}
 object App {
 
   def main(args: Array[String]): Unit = {
-    XlsxToNodesListConverter.read(new File(getClass.getResource("test1.xlsx").toURI)) match {
+    new XlsxToNodesListConverter().convert(new File(getClass.getResource("test1.xlsx").toURI)) match {
       case Success(nodesList) =>
         println(Json.prettyPrint(Json.toJson(nodesList)))
       case Failure(error) =>

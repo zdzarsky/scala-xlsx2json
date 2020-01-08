@@ -18,4 +18,7 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.0"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % "test"
 // Json
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.8.1"
+// Mockito
+libraryDependencies +=   "org.mockito" % "mockito-core" % "2.8.47" % "test"
+
 
